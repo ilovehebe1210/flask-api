@@ -6,7 +6,7 @@ from app import app
 def index():
     return 'Flask API started'
 
-@app.route('/predict',methods=['POST'])
+@app.route('/predict2',methods=['POST'])
 def  postInput():
      # 取得前端傳過來的值
      inserValues=request.get_json()
