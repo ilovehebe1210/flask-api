@@ -73,7 +73,7 @@ def  postInput():
      process_data=[]
      data2=[]
      
-     pickle_in = open(r'apps/model/randomforest.pickle', 'rb')
+     pickle_in = open(r'app/model/randomforest.pickle', 'rb')
      forest = pickle.load(pickle_in)
      
      predict_result = forest.predict(input_data)
