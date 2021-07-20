@@ -84,7 +84,7 @@ def  postInput():
        
     print(input_data)
      
-    pickle_in = open(r"/app/model/randomforest.pickle",'rb')
+    pickle_in = open("randomforest.pickle",'rb')
     forest = pickle.load(pickle_in)
     predict_result = forest.predict(input_data)
     score = forest.predict_proba(input_data)
