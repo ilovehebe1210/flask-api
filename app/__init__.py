@@ -29,7 +29,7 @@ def  postInput():
     process_data=[]
     #act=[]
     input_data=[]
-    raw_df = pd.read_excel("flask-api/app/WA_Fn-UseC_-HR-Employee-Attrition_Data_First_Processes_SMOTE_2.xls")
+    raw_df = pd.read_excel("WA_Fn-UseC_-HR-Employee-Attrition_Data_First_Processes_SMOTE_2.xls")
     raw_df =raw_df[cols]
 
     for x in range(0,len(inserValues),1):
