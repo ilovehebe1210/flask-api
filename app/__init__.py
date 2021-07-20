@@ -17,6 +17,13 @@ CORS(app)
 def oops():
      return 'hello!!'
 
+@app.route('/getdata')
+def getdata():
+     raw_df = pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv")
+     inserValuejs = raw_df.to_json(orient = 'records')
+     inserValues=json.loads(inserValuejs)
+     return make_response(dumps(inserValues))
+
 @app.route('/predict',methods=['POST'])
 def  postInput():
     inserValues=request.get_json()
