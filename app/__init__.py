@@ -5,10 +5,14 @@ Created on Wed Jul  7 20:50:23 2021
 @author: SASAD
 """
 import numpy as np
-import pickle
 import pandas as pd
+import json
+from pandas.io.json import json_normalize
 from flask import Flask, jsonify,request
 from flask_cors import CORS
+from json import dumps
+from flask import Flask, make_response
+import pickle
 
 
 app = Flask(__name__)
