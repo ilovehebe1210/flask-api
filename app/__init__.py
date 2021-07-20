@@ -29,7 +29,7 @@ def  postInput():
     process_data=[]
     #act=[]
     input_data=[]
-    raw_df = pd.read_excel(r"C:\Users\pc\Desktop\資料分析\WA_Fn-UseC_-HR-Employee-Attrition_Data_First_Processes_SMOTE_2.xls")
+    raw_df = pd.read_excel("WA_Fn-UseC_-HR-Employee-Attrition_Data_First_Processes_SMOTE_2.xls")
     raw_df =raw_df[cols]
 
     for x in range(0,len(inserValues),1):
@@ -84,7 +84,7 @@ def  postInput():
        
     print(input_data)
      
-    pickle_in = open(r"C:\Users\pc\Desktop\資料分析\idon'tknowwhy\randomforest.pickle",'rb')
+    pickle_in = open(r"app\model\randomforest.pickle",'rb')
     forest = pickle.load(pickle_in)
     predict_result = forest.predict(input_data)
     score = forest.predict_proba(input_data)
