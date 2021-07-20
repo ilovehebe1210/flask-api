@@ -131,7 +131,7 @@ def  postInput():
 
 
 @app.route('/analysis',methods=['POST'])
-def  postInput():
+def  postInput2():
      # 取得前端傳過來的值
      inserValues=request.get_json()
      df=pd.DataFrame(inserValues)
