@@ -13,8 +13,6 @@ from flask_cors import CORS
 from json import dumps
 from flask import Flask, make_response
 import pickle
-import matplotlib.pyplot as plt
-import plotly.express as px
 from json import dumps
 from flask import make_response
 
