@@ -129,6 +129,16 @@ def  postInput():
      
     return make_response(dumps(inserValues))
 
+cnxn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};Server=tcp:employee0723.database.windows.net,1433;Database=employee;Uid=manager;Pwd={@Zxcdsaqwe44};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
+cursor = cnxn.cursor()
+
+@app.route('/mssql_data',methods=['POST'])
+def  mssql_data():
+    query_veg = "SELECT * from dbo.employee "
+    df_veg = pd.read_sql(query_veg, cnxn)
+    queryjs = df_veg.to_json(orient = 'records')
+    query_data=json.loads(queryjs)
+    return make_response(dumps(query_data))
 
 @app.route('/analysis',methods=['POST'])
 def  postInput2():
