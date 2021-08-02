@@ -352,7 +352,7 @@ def  postInput2():
 @app.route('/out_reason')
 def  out_reason():
      # 取得前端傳過來的值
-     df= pd.read_csv(r"C:\Users\pc\Desktop\資料分析\WA_Fn-UseC_-HR-Employee-Attrition.csv")
+     df= pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv")
      sent_data=[]
      #overtime
      dept_att=df.groupby(['OverTime','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
