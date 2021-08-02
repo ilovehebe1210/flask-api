@@ -16,24 +16,40 @@ import pickle
 from json import dumps
 from flask import make_response
 
-
 def MTable(x):
     x=int(x)
     if x>=0 and x<=3:
-        return '組距1 3以下'
+        return '3-down'
     elif x>=3 and x<=7:
-        return '組距2 3-7'
+        return '3-7'
     else:
-        return '組距3 7以上'
-       
+        return '7-up'
 def MTable2(x, p, d):
     x=int(x)
     if x <= d[p][0.25]:
-        return str(d[p][0.25])+'後標' 
+        return str(d[p][0.25]) 
     elif x <= d[p][0.5]: 
-        return str(d[p][0.5])+'均標'
+        return str(d[p][0.5])
     else:
-        return str(d[p][0.75])+'前標'
+        return str(d[p][0.75])
+
+
+
+def income_value(x,low,hi,sent_0,sent_1,sent_2):
+    sent_0=float(sent_0)
+    sent_1=float(sent_1)
+    sent_2=float(sent_2)
+    
+    print('inc_val:',x,sent_0,sent_1,sent_2)
+    low=float(low)
+    hi=float(hi)
+    x=float(x)
+    if x<=low:
+        return str(sent_0)
+    elif x>low and x<=hi:
+        return str(sent_1)
+    else:
+        return str(sent_2)
 
 
 app = Flask(__name__)
@@ -626,5 +642,4 @@ def  out_reason():
      print(len(compare_data))
 
      return make_response(dumps(js))
- 
-    
+
