@@ -129,16 +129,6 @@ def  postInput():
      
     return make_response(dumps(inserValues))
 
-cnxn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};Server=tcp:employee0723.database.windows.net,1433;Database=employee;Uid=manager;Pwd={@Zxcdsaqwe44};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
-cursor = cnxn.cursor()
-
-@app.route('/mssql_data',methods=['POST'])
-def  mssql_data():
-    query_veg = "SELECT * from dbo.employee "
-    df_veg = pd.read_sql(query_veg, cnxn)
-    queryjs = df_veg.to_json(orient = 'records')
-    query_data=json.loads(queryjs)
-    return make_response(dumps(query_data))
 
 @app.route('/analysis',methods=['POST'])
 def  postInput2():
@@ -358,3 +348,283 @@ def  postInput2():
      
      
      return make_response(dumps(sent_data))
+
+@app.route('/out_reason')
+def  out_reason():
+     # 取得前端傳過來的值
+     df= pd.read_csv(r"C:\Users\pc\Desktop\資料分析\WA_Fn-UseC_-HR-Employee-Attrition.csv")
+     sent_data=[]
+     #overtime
+     dept_att=df.groupby(['OverTime','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='OverTime',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['OverTime'][i]==dept_att['OverTime']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('OverTime').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     #fig=px.bar(Tra_att,x='OverTime',y='Rate',title='OverTime wise Counts of People in an Organization')
+     #fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="OverTime")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+     final_df
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+#business travel
+     dept_att=df.groupby(['BusinessTravel','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='BusinessTravel',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['BusinessTravel'][i]==dept_att['BusinessTravel']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('BusinessTravel').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     #fig=px.bar(Tra_att,x='BusinessTravel',y='Rate',title='OverTime wise Counts of People in an Organization')
+     #fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="BusinessTravel")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+#stockoptionlevel
+     dept_att=df.groupby(['StockOptionLevel','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='StockOptionLevel',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['StockOptionLevel'][i]==dept_att['StockOptionLevel']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('StockOptionLevel').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     #fig=px.bar(Tra_att,x='StockOptionLevel',y='Rate',title='StockOptionLevel wise Counts of People in an Organization')
+     #fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="StockOptionLevel")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+#JobInvolvement
+     dept_att=df.groupby(['JobInvolvement','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='JobInvolvement',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['JobInvolvement'][i]==dept_att['JobInvolvement']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('JobInvolvement').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+#fig=px.bar(Tra_att,x='JobInvolvement',y='Rate',title='JobInvolvement wise Counts of People in an Organization')
+#fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="JobInvolvement")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+     #JobSatisfaction
+     dept_att=df.groupby(['JobSatisfaction','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='JobSatisfaction',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['JobSatisfaction'][i]==dept_att['JobSatisfaction']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('JobSatisfaction').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     #fig=px.bar(Tra_att,x='JobSatisfaction',y='Rate',title='JobSatisfaction wise Counts of People in an Organization')
+     #fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="JobSatisfaction")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+     #MaritalStatus
+     dept_att=df.groupby(['MaritalStatus','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='MaritalStatus',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['MaritalStatus'][i]==dept_att['MaritalStatus']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('MaritalStatus').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+#fig=px.bar(Tra_att,x='MaritalStatus',y='Rate',title='MaritalStatus wise Counts of People in an Organization')
+#fig.show()
+     final_df=pd.merge(Tra_att,dept_att,on="MaritalStatus")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+     #MonthlyIncome
+     quantiles = df.quantile(q=[0.25,0.5,0.75])
+
+     print(type(quantiles))
+     quantiles = quantiles.to_dict()
+
+     print(type(df))
+
+     df['MonthlyIncome'] = df['MonthlyIncome'].apply(MTable2,args=('MonthlyIncome',quantiles))
+     dept_att=df.groupby(['MonthlyIncome','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='月收分類',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['MonthlyIncome'][i]==dept_att['MonthlyIncome']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('MonthlyIncome').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+
+     final_df=pd.merge(Tra_att,dept_att,on="MonthlyIncome")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+#fig=px.bar(final_df,x='月收分類',y='Mani',title='MaritalStatus wise Counts of People in an Organization')
+#fig.show()
+
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+
+     final_df=final_df.values
+     low=float(final_df[0][0])
+     hi=float(final_df[2][0])
+
+#CompanyNum
+
+   
+     df['CompanyNum'] = df['NumCompaniesWorked'].apply(MTable)
+
+     dept_att=df.groupby(['CompanyNum','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+     #fig=px.bar(dept_att,x='CompanyNum',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['CompanyNum'][i]==dept_att['CompanyNum']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('CompanyNum').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+
+     final_df=pd.merge(Tra_att,dept_att,on="CompanyNum")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+#fig=px.bar(final_df,x='CompanyNum',y='Mani',title='MaritalStatus wise Counts of People in an Organization')
+#fig.show()
+
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+#EnvironmentSatisfaction
+     dept_att=df.groupby(['EnvironmentSatisfaction','Attrition']).apply(lambda x:x['DailyRate'].count()).reset_index(name='Counts')
+#fig=px.bar(dept_att,x='EnvironmentSatisfaction',y='Counts',color='Attrition',title='Department wise Counts of People in an Organization')
+     dept_att['jinanhansome']=''
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['EnvironmentSatisfaction'][i]==dept_att['EnvironmentSatisfaction']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+     Tra_att=dept_att.groupby('EnvironmentSatisfaction').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     final_df=pd.merge(Tra_att,dept_att,on="EnvironmentSatisfaction")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+#fig=px.bar(final_df,x='EnvironmentSatisfaction',y='Mani',title='EnvironmentSatisfaction wise Counts of People in an Organization')
+#fig.show()
+
+     d_records = final_df.to_dict('records')
+     sent_data.append(d_records)
+
+#Age
+
+     df['Age']=round(pd.Series(df['Age']),-1)
+     print(type(df['Age']))
+     dept_att=df.groupby(['Age','Attrition']).apply(lambda x:x['Age'].count()).reset_index(name='Counts')
+     for i in range(len(dept_att)):
+          temp=dept_att[dept_att['Age'][i]==dept_att['Age']]
+          Attrition_Yes=dept_att[dept_att['Attrition'][i]==dept_att['Attrition']]
+          dept_att.loc[i,'jinanhansome'] =(Attrition_Yes['Counts'].sum()-dept_att['Counts'][i])/(dept_att['Counts'].sum()-temp['Counts'].sum())
+          Tra_att=dept_att.groupby('Age').apply(lambda x:x['Counts']/x['Counts'].sum()).reset_index(name='Rate')
+     Tra_att=Tra_att[Tra_att['level_1']%2==1].drop('level_1',axis=1)
+     final_df=pd.merge(Tra_att,dept_att,on="Age")
+     final_df['Mani']=final_df['Rate']/final_df['jinanhansome']
+     final_df=final_df[final_df['Attrition']=='Yes']
+#fig=px.bar(final_df,x='Age',y='Mani',title='Age wise Counts of People in an Organization')
+#fig.show()
+     final_df2=final_df.groupby('Age').apply(lambda x:(x['Age']-5).astype('str')+'-'+(x['Age']+5).astype('str')).reset_index(name='Age-range')
+     final_df3=pd.merge(final_df,final_df2,on="Age").drop('level_1',axis=1).drop('Age',axis=1)
+     final_df3 = final_df3.reindex(columns=['Age','Attrition','Counts','Rate','Mani'])
+
+     d_records = final_df3.to_dict('records')
+     sent_data.append(d_records)
+     
+     
+     compare=df
+     cols=['Attrition','OverTime','BusinessTravel','StockOptionLevel','JobInvolvement','JobSatisfaction','MaritalStatus','EnvironmentSatisfaction','MonthlyIncome','NumCompaniesWorked','Age']
+     col=['OverTime','BusinessTravel','StockOptionLevel','JobInvolvement','JobSatisfaction','MaritalStatus','MonthlyIncome','CompanyNum','EnvironmentSatisfaction','Age']
+
+     print(sent_data)
+
+     for i in range(0,len(cols)-2,1):
+         globals()[col[i]]={}
+         for x in range(0,len(sent_data[i]),1):
+             globals()[col[i]][sent_data[i][x][col[i]]]=sent_data[i][x]['Mani']             
+             if col[i] == "MonthlyIncome":
+                 sent_0=sent_data[i][x][col[i]]
+                 sent_1=sent_data[i][x][col[i]]
+                 sent_2=sent_data[i][x][col[i]]
+             
+     Age_value={'2':sent_data[9][0]['Mani'],'3':sent_data[9][1]['Mani'],'4':sent_data[9][2]['Mani'],'5':sent_data[9][2]['Mani'],'6':sent_data[9][2]['Mani']}
+          
+
+
+     
+        
+     compare_data=compare[cols]
+     compare_data=compare_data[compare_data["Attrition"] == "Yes"]
+     compare_data=compare_data.drop("Attrition", axis = 1)
+     compare_data_v=compare_data.values
+     a=[]
+     b=[]
+     c=[]
+     for i in range(0,len(compare_data_v),1):   
+         compare_data_v[i][0]=OverTime[compare_data_v[i][0]]
+         compare_data_v[i][1]=BusinessTravel[compare_data_v[i][1]]    
+         compare_data_v[i][2]=StockOptionLevel[compare_data_v[i][2]]
+         compare_data_v[i][3]=JobInvolvement[compare_data_v[i][3]]
+         compare_data_v[i][4]=JobSatisfaction[compare_data_v[i][4]]
+         compare_data_v[i][5]=MaritalStatus[compare_data_v[i][5]]
+         compare_data_v[i][6]=EnvironmentSatisfaction[compare_data_v[i][6]]    
+         compare_data_v[i][7]=income_value(compare_data_v[i][7],low,hi,sent_0,sent_1,sent_2)
+         compare_data_v[i][7]=MonthlyIncome[compare_data_v[i][7]]    
+         compare_data_v[i][8]=MTable(compare_data_v[i][8])
+         compare_data_v[i][8]=CompanyNum[str(compare_data_v[i][8])]    
+         compare_data_v[i][9]=str(int((round(compare_data_v[i][9],-1))/10))
+         compare_data_v[i][9]=Age_value[compare_data_v[i][9]]
+
+         max_thir=list(map(list(compare_data_v[i]).index, heapq.nlargest(3, compare_data_v[i])))
+         a.append(str(col[max_thir[0]]))
+         b.append(str(col[max_thir[1]]))
+         c.append(str(col[max_thir[2]]))
+     
+     compare_data['reason']=a
+     #compare_data['reason2']=b
+     #compare_data['reason3']=c
+     
+     js = compare_data.to_dict(orient="records")
+     print(len(compare_data))
+
+     return make_response(dumps(js))
+ 
+    
