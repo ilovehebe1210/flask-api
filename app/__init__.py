@@ -608,6 +608,28 @@ def  out_reason():
 
      
         
+     compare=df
+     cols=['Attrition','OverTime','BusinessTravel','StockOptionLevel','JobInvolvement','JobSatisfaction','MaritalStatus','EnvironmentSatisfaction','MonthlyIncome','NumCompaniesWorked','Age']
+
+     col=['OverTime','BusinessTravel','StockOptionLevel','JobInvolvement','JobSatisfaction','MaritalStatus','MonthlyIncome','CompanyNum','EnvironmentSatisfaction','Age']
+
+     print(sent_data)
+
+     for i in range(0,len(cols)-2,1):
+         globals()[col[i]]={}
+         for x in range(0,len(sent_data[i]),1):
+             globals()[col[i]][sent_data[i][x][col[i]]]=sent_data[i][x]['Mani']             
+             if col[i] == "MonthlyIncome":
+                 sent_0=sent_data[i][x][col[i]]
+                 sent_1=sent_data[i][x][col[i]]
+                 sent_2=sent_data[i][x][col[i]]
+             
+     Age_value={'2':sent_data[9][0]['Mani'],'3':sent_data[9][1]['Mani'],'4':sent_data[9][2]['Mani'],'5':sent_data[9][2]['Mani'],'6':sent_data[9][2]['Mani']}
+          
+
+
+     
+        
      compare_data=compare[cols]
      compare_data=compare_data[compare_data["Attrition"] == "Yes"]
      compare_data=compare_data.drop("Attrition", axis = 1)
@@ -635,12 +657,34 @@ def  out_reason():
          b.append(str(col[max_thir[1]]))
          c.append(str(col[max_thir[2]]))
      
+     year_arr=[]
+     month_arr=[]
+     day_arr=[]   
+     for i in range(0,len(compare_data),1):
+         year=np.random.randint(2000,2021)
+         year_arr.append(year)
+         month=np.random.randint(1,12)
+         month_arr.append(month)
+         if month in [1,3,5,7,8,10,12]:
+             day=str(np.random.randint(1,31))
+         elif month in [4,6,9,11]:
+             day=str(np.random.randint(1,30))
+         else:
+             if year%4 == 0:              
+                 day=str(np.random.randint(1,29))
+             else:
+                 day=str(np.random.randint(1,28))
+         day_arr.append(day)       
+     print(len(compare_data),len(year_arr))
+    
      compare_data['reason']=a
+     compare_data['year']=year_arr
+     compare_data['month']=month_arr
+     compare_data['day']=day_arr
+     compare_data['EmployeeNumber']=compare['EmployeeNumber']
      #compare_data['reason2']=b
      #compare_data['reason3']=c
-     
      js = compare_data.to_dict(orient="records")
-     print(len(compare_data))
 
      return make_response(dumps(js))
 
