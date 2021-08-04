@@ -682,6 +682,13 @@ def  out_reason():
      compare_data['month']=month_arr
      compare_data['day']=day_arr
      compare_data['EmployeeNumber']=compare['EmployeeNumber']
+     compare_data['Department']=compare['Department']
+     compare_data['Age']=compare['Age']
+     compare_data['Gender']=compare['Gender']
+     compare_data['EducationField']=compare['EducationField']
+     compare_data['JobRole']=compare['JobRole']
+     compare_data['MaritalStatus']=compare['MaritalStatus']
+     
      #compare_data['reason2']=b
      #compare_data['reason3']=c
      js = compare_data.to_dict(orient="records")
