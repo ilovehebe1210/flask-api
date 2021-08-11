@@ -54,7 +54,17 @@ def income_value(x,low,hi,sent_0,sent_1,sent_2):
 
 
 app = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = "return2333"  # Change this!
+jwt = JWTManager(app)
+
+app.config['MYSQL_HOST']='remotemysql.com'
+app.config['MYSQL_USER']='GqD8cGeo5O'
+app.config['MYSQL_PASSWORD']='BKeOFOJ8xs'
+app.config['MYSQL_DB']='GqD8cGeo5O'
+
+mysql=MySQL(app)
 CORS(app)
+
 @app.route('/test')
 def oops():
      return 'hello!!'
@@ -65,6 +75,25 @@ def getdata():
      inserValuejs = raw_df.to_json(orient = 'records')
      inserValues=json.loads(inserValuejs)
      return make_response(dumps(inserValues))
+
+@app.route('/login_validation', methods=['POST'])
+def login_validation():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+
+    mycursor = mysql.connection.cursor()
+    mycursor.execute("SELECT * FROM User_list  WHERE email LIKE %s and password LIKE %s" ,(email,password))    
+    data = mycursor.fetchall()
+    mysql.connection.commit()
+    print(email,password)
+    #user_data={"user_name":data[0][1],"user_account":data[0][4]}
+    
+    if len(data)>0:
+        access_token=create_access_token(identity=email)
+        #session['user_id']=data[0][1]
+        return jsonify(access_token=access_token)
+    else:
+        return "password or email error!"
 
 @app.route('/predict',methods=['POST'])
 def  postInput():
