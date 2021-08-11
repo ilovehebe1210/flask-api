@@ -7,3 +7,4 @@ xgboost
 pandas
 openpyxl
 flask_mysqldb
+Flask-JWT-Extended
