@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import json
 from pandas.io.json import json_normalize
-from flask import Flask, jsonify,request
+from flask import Flask, jsonify,request,render_template, request,redirect,session
 from flask_cors import CORS
 from json import dumps
 from flask import Flask, make_response
@@ -16,6 +16,11 @@ import pickle
 from json import dumps
 from flask import make_response
 import heapq
+from flask_mysqldb import MySQL
+import os 
+from flask import jsonify
+
+
 
 def MTable(x):
     x=int(x)
