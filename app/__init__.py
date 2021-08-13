@@ -734,3 +734,16 @@ def  out_reason():
 
      return make_response(dumps(js))
 
+@app.route('/adduser', methods=['POST'])
+def adduser():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    account = request.json.get('account')
+    name = request.json.get('name')
+    id_n=id_num()
+    
+    mycursor = mysql.connection.cursor()
+    mycursor.execute("INSERT INTO User_list(email,password,account,name,id) VALUES(%s,%s,%s,%s,%s)",(email,password,account,name,id_n))    
+    re=str(email+password+account+name)
+    mysql.connection.commit()    
+    return re
