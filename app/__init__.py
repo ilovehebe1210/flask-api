@@ -25,7 +25,13 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
-
+def id_num():
+    mycursor = mysql.connection.cursor()
+    mycursor.execute("SELECT * FROM User_list")
+    data = mycursor.fetchall()
+    num=len(data)+1
+    mysql.connection.commit()
+    return num
 
 def MTable(x):
     x=int(x)
