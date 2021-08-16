@@ -742,14 +742,21 @@ def  out_reason():
 
 @app.route('/adduser', methods=['POST'])
 def adduser():
-    email = request.json.get('email')
-    password = request.json.get('password')
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
     account = request.json.get('account')
     name = request.json.get('name')
     id_n=id_num()
-    
+
     mycursor = mysql.connection.cursor()
-    mycursor.execute("INSERT INTO User_list(email,password,account,name,id) VALUES(%s,%s,%s,%s,%s)",(email,password,account,name,id_n))    
-    re=str(email+password+account+name)
-    mysql.connection.commit()    
-    return re
+    mycursor.execute("SELECT * FROM User_list  WHERE email LIKE %s and password LIKE %s" ,(email,password,))    
+    data = mycursor.fetchall()
+    
+    if len(data)>0:
+        return "this email was registed"        
+    else:
+        mycursor = mysql.connection.cursor()
+        mycursor.execute("INSERT INTO User_list(email,password,account,name,id) VALUES(%s,%s,%s,%s,%s)",(email,password,account,name,id_n))  
+        re=str(email+password+account+name)
+        mysql.connection.commit()    
+        return re
