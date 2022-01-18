@@ -75,7 +75,7 @@ jwt = JWTManager(app)
 
 app.config['MYSQL_HOST']='remotemysql.com'
 app.config['MYSQL_USER']='GqD8cGeo5O'
-app.config['MYSQL_PASSWORD']='BKeOFOJ8xs'
+app.config['MYSQL_PASSWORD']='VCLBecsfv3'
 app.config['MYSQL_DB']='GqD8cGeo5O'
 
 mysql=MySQL(app)
